@@ -40,9 +40,7 @@
 
           <label for="service">Service:</label>
           <select id="service" name="service" required>
-            <option value="grooming">Grooming</option>
-            <option value="massage">Massage</option>
-            <option value="bath">Bath</option>
+            <!-- Options will be populated dynamically by JavaScript -->
           </select>
           
           <label for="date">Date:</label>
@@ -59,52 +57,54 @@
   </footer>
 
   <script>
-   
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    if (!loggedInUser) {
-      alert('You must log in to access this page.');
-      window.location.href = 'login.html'; 
+    // Array of available services
+    const services = [
+      { id: 1, name: "Grooming", price: "$50" },
+      { id: 2, name: "Massage", price: "$40" },
+      { id: 3, name: "Bath", price: "$30" },
+      { id: 4, name: "Nail Trimming", price: "$20" },
+      { id: 5, name: "Teeth Cleaning", price: "$25" },
+    ];
+
+    // Function to populate the services dropdown
+    function populateServices() {
+      const serviceDropdown = document.getElementById('service');
+
+      if (serviceDropdown) {
+        // Clear existing options
+        serviceDropdown.innerHTML = '';
+
+        // Loop through the services array and create options
+        services.forEach(service => {
+          const option = document.createElement('option');
+          option.value = service.name.toLowerCase();
+          option.textContent = `${service.name} (${service.price})`;
+          serviceDropdown.appendChild(option);
+        });
+      }
     }
 
+    // Call the function to populate services when the page loads
+    window.onload = populateServices;
 
-    const nav = document.querySelector('nav ul');
-    if (nav && loggedInUser) {
-      nav.innerHTML = `
-        <li><a href="index.html">Home</a></li>
-        <li><a href="appointment.html">Appointment</a></li>
-        <li><a href="#" id="logout">Logout</a></li>
-      `;
-      document.getElementById('logout')?.addEventListener('click', function () {
-        localStorage.removeItem('loggedInUser'); 
-        window.location.href = 'index.html'; 
-      });
-    }
-
-
+    // Existing appointment form submission logic
     document.getElementById('appointmentForm').addEventListener('submit', function (event) {
       event.preventDefault(); 
-
-
       const petName = document.getElementById('petName').value;
       const petType = document.getElementById('petType').value;
       const service = document.getElementById('service').value;
       const date = document.getElementById('date').value;
 
-      
       const isSuccess = true; 
-
       if (isSuccess) {
-        
-        const confirmationMessage = `Appointment booked successfully for ${petName} (${petType}) on ${date} for ${service}.`;
+        const confirmationMessage = `Appointment booked successfully for ${petName} on ${date} for ${service}.`;
         document.getElementById('appointmentMessage').textContent = confirmationMessage;
-        document.getElementById('appointmentMessage').className = 'success'; 
+        document.getElementById('appointmentMessage').style.color = 'green';
+        document.getElementById('appointmentForm').reset();
       } else {
-
         document.getElementById('appointmentMessage').textContent = 'Booking failed. Please try again.';
-        document.getElementById('appointmentMessage').className = 'error'; 
+        document.getElementById('appointmentMessage').style.color = 'red';
       }
-
-      document.getElementById('appointmentForm').reset();
     });
   </script>
 </body>
