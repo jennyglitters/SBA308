@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Spa - Appointment</title>
+  <link rel="stylesheet" href="styles/styles.css"> 
+  <link rel="stylesheet" href="styles/appointment.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="appointment.html">Appointment</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="main-container">
+    <section class="combined-section">
+      <div class="hero-content">
+        <img src="images/hero-appointment.jpg" alt="Appointment Hero Image">
+        <h1>Book an Appointment</h1>
+      </div>
+      <div class="form-content">
+        <h2>Appointment Form</h2>
+        <p id="appointmentMessage"></p> 
+        <form id="appointmentForm">
+          <label for="petName">Pet Name:</label>
+          <input type="text" id="petName" name="petName" required>
+
+          <label for="petType">Pet Type:</label>
+          <select id="petType" name="petType" required>
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+          </select>
+
+          <label for="service">Service:</label>
+          <select id="service" name="service" required>
+            <option value="grooming">Grooming</option>
+            <option value="massage">Massage</option>
+            <option value="bath">Bath</option>
+          </select>
+          
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date" required>
+          
+          <button type="submit">Book</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Pet Spa. All rights reserved.</p>
+  </footer>
+
+  <script>
+   
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    if (!loggedInUser) {
+      alert('You must log in to access this page.');
+      window.location.href = 'login.html'; 
+    }
+
+
+    const nav = document.querySelector('nav ul');
+    if (nav && loggedInUser) {
+      nav.innerHTML = `
+        <li><a href="index.html">Home</a></li>
+        <li><a href="appointment.html">Appointment</a></li>
+        <li><a href="#" id="logout">Logout</a></li>
+      `;
+      document.getElementById('logout')?.addEventListener('click', function () {
+        localStorage.removeItem('loggedInUser'); 
+        window.location.href = 'index.html'; 
+      });
+    }
+
+
+    document.getElementById('appointmentForm').addEventListener('submit', function (event) {
+      event.preventDefault(); 
+
+
+      const petName = document.getElementById('petName').value;
+      const petType = document.getElementById('petType').value;
+      const service = document.getElementById('service').value;
+      const date = document.getElementById('date').value;
+
+      
+      const isSuccess = true; 
+
+      if (isSuccess) {
+        
+        const confirmationMessage = `Appointment booked successfully for ${petName} (${petType}) on ${date} for ${service}.`;
+        document.getElementById('appointmentMessage').textContent = confirmationMessage;
+        document.getElementById('appointmentMessage').className = 'success'; 
+      } else {
+
+        document.getElementById('appointmentMessage').textContent = 'Booking failed. Please try again.';
+        document.getElementById('appointmentMessage').className = 'error'; 
+      }
+
+      document.getElementById('appointmentForm').reset();
+    });
+  </script>
+</body>
+</html>
